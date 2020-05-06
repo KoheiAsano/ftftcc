@@ -1,8 +1,12 @@
 CFLAGS=-std=c11 -g -static
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:.c=.o)
+ftftcc: $(OBJS)
+	$(CC) -o ftftcc $(OBJS) $(LDFLAGS)
 
-ftftcc: ftftcc.c
+$(OBJS): ftftcc.h
 
-test:ftftcc
+test: ftftcc
 	./test.sh
 
 clean:
