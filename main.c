@@ -9,13 +9,15 @@ int main(int argc, char **argv)
     }
     user_input = argv[1];
     token = tokenize();
-    Node *node = expr();
+    Node *node = program();
     printf(".intel_syntax noprefix\n");
     printf(".global main\n");
     printf("main:\n");
-
-    gen(node);
-    printf("    pop rax\n");
+    for (Node *n = node; n; n = n->next)
+    {
+        gen(n);
+        printf("    pop rax\n");
+    }
     printf("    ret\n");
     return 0;
 }

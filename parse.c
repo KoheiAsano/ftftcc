@@ -1,11 +1,13 @@
 #include "ftftcc.h"
 
-Node *equality();
-Node *relational();
-Node *add();
-Node *mul();
-Node *unary();
-Node *primary();
+Node *stmp(void);
+static Node *expr(void);
+Node *equality(void);
+Node *relational(void);
+Node *add(void);
+Node *mul(void);
+Node *unary(void);
+Node *primary(void);
 
 Node *new_node(NodeKind kind)
 {
@@ -28,12 +30,29 @@ Node *new_node_num(int val)
     node->val = val;
     return node;
 }
-
-Node *expr()
+static Node *stmt(void)
 {
-    Node *node = equality();
-
+    Node *node = expr();
+    expect(";");
     return node;
+}
+
+Node *program(void)
+{
+    Node head = {};
+    Node *cur = &head;
+
+    while (!at_eof())
+    {
+        cur->next = stmt();
+        cur = cur->next;
+    }
+    return head.next;
+}
+
+static Node *expr()
+{
+    return equality();
 }
 
 Node *equality()
