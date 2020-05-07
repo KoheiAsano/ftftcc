@@ -1,7 +1,7 @@
 #include "ftftcc.h"
 
 char *user_input;
-
+// Error report function, exit after report.
 void error_at(char *loc, char *fmt, ...)
 {
     va_list ap;
@@ -15,7 +15,7 @@ void error_at(char *loc, char *fmt, ...)
     fprintf(stderr, "\n");
     exit(1);
 }
-// curに新しいTokenをつなげる
+// Attach new token to cur, Return new token
 Token *new_token(TokenKind kind, Token *cur, char *str, int len)
 {
     Token *tok = calloc(1, sizeof(Token));
@@ -26,13 +26,13 @@ Token *new_token(TokenKind kind, Token *cur, char *str, int len)
     return tok;
 }
 
-// *pが*qではじまるか
+// Check whether p start by p
 bool startswith(char *p, char *q)
 {
     return memcmp(p, q, strlen(q)) == 0;
 }
 
-// 文字列pをTokenizeする
+// Tokenize p
 Token *tokenize()
 {
     char *p = user_input;
@@ -88,14 +88,14 @@ bool consume(char *op)
 void expect(char *op)
 {
     if (token->kind != TK_RESERVED || strlen(op) != token->len || memcmp(token->str, op, token->len))
-        error_at(token->str, "'%s'ではありません", op);
+        error_at(token->str, " is not '%s'", op);
     token = token->next;
 }
 // Ensure that current token is TK_NUM
 int expect_number()
 {
     if (token->kind != TK_NUM)
-        error_at(token->str, "数ではありません");
+        error_at(token->str, "expected number but ");
     int val = token->val;
     token = token->next;
     return val;
