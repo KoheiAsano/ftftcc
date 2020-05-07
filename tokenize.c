@@ -1,7 +1,18 @@
 #include "ftftcc.h"
 
 char *user_input;
-// Error report function, exit after report.
+
+// Report an error and exit.
+void error(char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    fprintf(stderr, "\n");
+    exit(1);
+}
+
+// Report an error location and exit.
 void error_at(char *loc, char *fmt, ...)
 {
     va_list ap;
@@ -80,6 +91,13 @@ Token *tokenize()
             continue;
         }
 
+        // Identifier
+        if ('a' <= *p && *p <= 'z')
+        {
+            cur = new_token(TK_IDENT, cur, p++, 1);
+            continue;
+        }
+
         if (isdigit(*p))
         {
             cur = new_token(TK_NUM, cur, p, 1);
@@ -104,6 +122,16 @@ bool consume(char *op)
     token = token->next;
     return true;
 }
+// Consume the current token if it is Identifier, return token
+Token *consume_ident()
+{
+    if (token->kind != TK_IDENT)
+        return NULL;
+    Token *tok = token;
+    token = token->next;
+    return tok;
+}
+
 // Ensure that current token is given `op`
 void expect(char *op)
 {
