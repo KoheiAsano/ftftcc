@@ -31,6 +31,17 @@ bool startswith(char *p, char *q)
 {
     return memcmp(p, q, strlen(q)) == 0;
 }
+// Check whether c is alphabet or not
+bool is_alpha(char c)
+{
+    return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
+}
+
+// Check whether c is alphabet or number or not
+bool is_alnum(char c)
+{
+    return ('0' <= c && c <= '9') || is_alpha(c);
+}
 
 // Tokenize p
 Token *tokenize()
@@ -47,13 +58,22 @@ Token *tokenize()
             p++;
             continue;
         }
-
+        // keywords
+        if (startswith(p, "return") && !is_alnum(p[6]))
+        {
+            cur = new_token(TK_RESERVED, cur, p, 6);
+            p += 6;
+            continue;
+        }
+        // multi-character symbols
         if (startswith(p, "==") || startswith(p, "!=") || startswith(p, "<=") || startswith(p, ">="))
         {
             cur = new_token(TK_RESERVED, cur, p, 2);
             p += 2;
             continue;
         }
+
+        // single-character symbols
         if (strchr("+-*/()<>=;", *p))
         {
             cur = new_token(TK_RESERVED, cur, p++, 1);

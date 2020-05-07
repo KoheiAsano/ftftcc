@@ -16,6 +16,13 @@ Node *new_node(NodeKind kind)
     return node;
 }
 
+Node *new_unary(NodeKind kind, Node *lhs)
+{
+    Node *node = new_node(kind);
+    node->lhs = lhs;
+    return node;
+}
+
 Node *new_binary(NodeKind kind, Node *lhs, Node *rhs)
 {
     Node *node = new_node(kind);
@@ -45,9 +52,18 @@ Node *program(void)
 }
 
 // stmt = expr ";"
+//      | "return" expr ";"
 static Node *stmt(void)
 {
-    Node *node = expr();
+    Node *node;
+    if (consume("return"))
+    {
+        node = new_unary(ND_RETURN, expr());
+    }
+    else
+    {
+        node = expr();
+    }
     expect(";");
     return node;
 }
