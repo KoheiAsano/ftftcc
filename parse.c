@@ -1,6 +1,6 @@
 #include "ftftcc.h"
 
-Node *stmp(void);
+static Node *stmt(void);
 static Node *expr(void);
 Node *equality(void);
 Node *relational(void);
