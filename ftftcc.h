@@ -37,27 +37,27 @@ bool at_eof();
 
 typedef enum
 {
-    ND_ADD,
-    ND_SUB,
-    ND_MUL,
-    ND_DIV,
-    ND_EQ,
-    ND_NEQ,
-    ND_LT,
-    ND_LE,
-    ND_NUM,
-    ND_EXPR_STMT,
-    ND_RETURN,
+    ND_ADD,       // +
+    ND_SUB,       // -
+    ND_MUL,       // *
+    ND_DIV,       // /
+    ND_EQ,        // ==
+    ND_NEQ,       // !=
+    ND_LT,        // <
+    ND_LE,        // <=
+    ND_NUM,       // Integer
+    ND_EXPR_STMT, // Expression Statement
+    ND_RETURN,    // "return"
 } NodeKind;
 
 typedef struct Node Node;
 struct Node
 {
     NodeKind kind;
-    Node *next;
+    Node *next; // Next node
     Node *lhs;
     Node *rhs;
-    int val;
+    int val; // Used if kind == ND_NUM
 };
 
 Node *new_node(NodeKind kind);
